@@ -29,6 +29,9 @@ extension Style {
                 break
             }
         }
+        if attributes[.font] == nil {
+            attributes[.font] = fontProvider.provideFont(bold: false, italic: false)
+        }
         return attributes
     }
     
