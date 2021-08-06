@@ -20,7 +20,7 @@ extension Style {
                 attributes[.foregroundColor] = try Color(hex: value)
             case "fontStyle":
                 if value.contains("underline") {
-                    attributes[.underlineStyle] = UnderlineStyle.single
+                    attributes[.underlineStyle] = UnderlineStyle.single.rawValue as NSNumber
                 } else {
                     attributes.removeValue(forKey: .underlineStyle)
                 }
