@@ -26,13 +26,12 @@ public struct Theme: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.init(
-            metadata: try Metadata(uniqueKeysWithValues:
+            metadata: Metadata(uniqueKeysWithValues:
                 MetadataKey.allCases
-                    .map {
-                        (
-                            key: $0,
-                            value: try container.decode(String.self, forKey: CodingKeys(rawValue: $0.rawValue)!)
-                        )
+                    .compactMap { key in
+                        (try? container.decode(String.self, forKey: CodingKeys(rawValue: key.rawValue)!)).map {
+                            (key: key, value: $0)
+                        }
                     }
             ),
             styles: try container.decode([Style].self, forKey: .settings)
