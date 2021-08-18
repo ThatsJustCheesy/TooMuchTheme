@@ -61,7 +61,7 @@ final class ScopeSelectorParseTests: XCTestCase {
     
     // Newlines appear in some scope selectors, and hyphens apprear in
     // some scope names, like those found in the Brilliance TextMate themes.
-    func testNewlineAndHyphenInSelector() throws {
+    func testNewlineInSelectorAndPunctuationInScopeName() throws {
         for (selector, expected) in [
             (
                 "meta.property.vendor.microsoft.trident.5,\nmeta.property.vendor.microsoft.trident.5 support.type.property-name",
@@ -71,6 +71,10 @@ final class ScopeSelectorParseTests: XCTestCase {
                         .init(selector: .transitive, scopeName: "support.type.property-name")
                     ]))))
                 ])
+            ),
+            (
+                "under_score.underscore_",
+                ScopeSelector(composites: [.init(base: .init(term: .path(.init(root: "under_score.underscore_"))))])
             )
         ] {
             XCTAssertEqual(try ScopeSelector(selector), expected)

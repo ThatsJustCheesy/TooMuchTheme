@@ -1,3 +1,4 @@
+import Foundation
 import FootlessParser
 
 public struct ScopeName: Equatable, Codable {
@@ -23,7 +24,10 @@ public struct ScopeName: Equatable, Codable {
 extension ScopeName: Parsable, LosslessStringConvertible, ExpressibleByStringLiteral {
     
     static var parser: Parser<Character, Self> {
-        let component = extend <^> alphanumeric <*> zeroOrMore(char(.alphanumerics.union(["-"]), name: "scope name character"))
+        let componentFirstCharacter: CharacterSet = .alphanumerics.union(["_"])
+        let componentSubsequentCharacter: CharacterSet = componentFirstCharacter.union(["-"])
+        let component = extend <^> char(componentFirstCharacter, name: "scope name character")
+            <*> zeroOrMore(char(componentSubsequentCharacter, name: "scope name character"))
         return ScopeName.init <^> (extend <^> component <*> zeroOrMore(token(".") *> component))
     }
     
