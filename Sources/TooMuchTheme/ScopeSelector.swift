@@ -31,7 +31,7 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
         
         static let parser: Parser<Character, Self> =
             curry { Composite(base: $0, compositions: $1) } <^>
-                (zeroOrMore(whitespace) *> Expression.parser)
+                (zeroOrMore(whitespacesOrNewline) *> Expression.parser)
                 <*> zeroOrMore(Composition.parser)
         
         public var description: String {
@@ -63,7 +63,7 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
             
             static let parser: Parser<Character, Self> =
                 curry(Composition.init) <^>
-                    (zeroOrMore(whitespace) *> Operation.parser) <*> Expression.parser
+                    (zeroOrMore(whitespacesOrNewline) *> Operation.parser) <*> Expression.parser
             
             public var description: String {
                 "\(operation.rawValue) \(operand)"
@@ -120,7 +120,7 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
         
         static let parser: Parser<Character, Self> =
             curry(Expression.init) <^>
-                (zeroOrMore(whitespace) *> (token("-") *> pure(true) <|> pure(false)))
+                (zeroOrMore(whitespacesOrNewline) *> (token("-") *> pure(true) <|> pure(false)))
                 <*> Term.parser
         
         public var description: String {
@@ -200,7 +200,7 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
         
         static let parser: Parser<Character, Self> =
             curry(Filter.init) <^>
-                (zeroOrMore(whitespace) *> Side.parser) <*> Term.parser
+                (zeroOrMore(whitespacesOrNewline) *> Side.parser) <*> Term.parser
         
         public var description: String {
             "\(side.rawValue) \(term)"
@@ -221,7 +221,7 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
         }
         
         static let parser: Parser<Character, Self> =
-            Group.init <^> (zeroOrMore(whitespace) *> token("(") *> lazy(ScopeSelector.parser) <* zeroOrMore(whitespace) <* token(")"))
+            Group.init <^> (zeroOrMore(whitespacesOrNewline) *> token("(") *> lazy(ScopeSelector.parser) <* zeroOrMore(whitespacesOrNewline) <* token(")"))
         
         public var description: String {
             "(\(selector))"
@@ -267,10 +267,10 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
         
         static let parser: Parser<Character, Self> =
             curry { Path(beginAnchor: $0, endAnchor: $3, root: $1, descendents: $2) } <^>
-                (zeroOrMore(whitespace) *> (token("^") *> pure(true) <|> pure(false)))
-                <*> (zeroOrMore(whitespace) *> ScopeName.parser)
+                (zeroOrMore(whitespacesOrNewline) *> (token("^") *> pure(true) <|> pure(false)))
+                <*> (zeroOrMore(whitespacesOrNewline) *> ScopeName.parser)
                 <*> zeroOrMore(Descendent.parser)
-                <*> (zeroOrMore(whitespace) *> (token("$") *> pure(true) <|> pure(false)))
+                <*> (zeroOrMore(whitespacesOrNewline) *> (token("$") *> pure(true) <|> pure(false)))
         
         public var description: String {
             "\(beginAnchor ? "^ " : "")\(([root] + descendents).map { "\($0)" }.joined(separator: " "))\(endAnchor ? " $" : "")"
@@ -298,7 +298,7 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
             }
             
             static let parser: Parser<Character, Self> =
-                curry(Descendent.init) <^> (zeroOrMore(whitespace) *> Selector.parser) <*> (zeroOrMore(whitespace) *> ScopeName.parser)
+                curry(Descendent.init) <^> (zeroOrMore(whitespacesOrNewline) *> Selector.parser) <*> (zeroOrMore(whitespacesOrNewline) *> ScopeName.parser)
             
             public var description: String {
                 switch selector {
@@ -325,7 +325,7 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
     
     static let parser: Parser<Character, Self> =
         ScopeSelector.init <^> (
-            (extend <^> Composite.parser <*> zeroOrMore(zeroOrMore(whitespace) *> token(",") *> Composite.parser))
+            (extend <^> Composite.parser <*> zeroOrMore(zeroOrMore(whitespacesOrNewline) *> token(",") *> Composite.parser))
         )
     
     public init<Str: StringProtocol>(_ string: Str) throws {

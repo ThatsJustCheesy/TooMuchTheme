@@ -23,7 +23,7 @@ public struct ScopeName: Equatable, Codable {
 extension ScopeName: Parsable, LosslessStringConvertible, ExpressibleByStringLiteral {
     
     static var parser: Parser<Character, Self> {
-        let component = oneOrMore(alphanumeric)
+        let component = extend <^> alphanumeric <*> zeroOrMore(char(.alphanumerics.union(["-"]), name: "scope name character"))
         return ScopeName.init <^> (extend <^> component <*> zeroOrMore(token(".") *> component))
     }
     

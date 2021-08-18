@@ -67,6 +67,7 @@ final class ScopeSelectorMatchTests: XCTestCase {
             ("a & b", Context(main: Scope("b.a b")), false),
             ("- a b - c", Context(main: Scope("random a stuff.c back.b")), true),
             ("- a b - c", Context(main: Scope("random a stuff.c b.back")), false),
+            ("- a b - c", Context(main: Scope("random b a stuff.c")), true),
             ("- a b - c", Context(main: Scope("random b a c stuff")), false)
         ] {
             try assert(selector: selector, context: context, shouldMatch: shouldMatch)
