@@ -61,18 +61,18 @@ public struct Theme: Codable {
 
 extension Theme {
     
-    public func attributes(for context: Context, fontProvider: FontProvider) throws -> [AttributedString.Key : Any] {
+    public func attributes(for context: Context?, fontProvider: FontProvider) throws -> [AttributedString.Key : Any] {
         var attributes: [AttributedString.Key : Any] = [:]
         for style in styles {
-            if style.scope?.matches(context) ?? true {
+            if context.map({ style.scope?.matches($0) ?? true }) ?? (style.scope == nil) {
                 attributes.merge(try style.attributes(fontProvider: fontProvider), uniquingKeysWith: { $1 })
             }
         }
         return attributes
     }
     
-    public func attributes(for scope: Scope, fontProvider: FontProvider) throws -> [AttributedString.Key : Any] {
-        try attributes(for: Context(main: scope), fontProvider: fontProvider)
+    public func attributes(for scope: Scope?, fontProvider: FontProvider) throws -> [AttributedString.Key : Any] {
+        try attributes(for: scope.map { Context(main: $0) }, fontProvider: fontProvider)
     }
     
 }
