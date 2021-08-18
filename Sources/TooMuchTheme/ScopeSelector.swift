@@ -320,7 +320,7 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
     }
     
     public func matches(_ context: Context) -> Bool {
-        composites.first { $0.matches(context) } != nil
+        composites.isEmpty || composites.first { $0.matches(context) } != nil
     }
     
     static let parser: Parser<Character, Self> =

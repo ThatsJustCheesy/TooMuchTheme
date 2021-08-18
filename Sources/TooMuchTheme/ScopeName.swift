@@ -26,8 +26,8 @@ extension ScopeName: Parsable, LosslessStringConvertible, ExpressibleByStringLit
     static var parser: Parser<Character, Self> {
         let componentFirstCharacter: CharacterSet = .alphanumerics.union(["_"])
         let componentSubsequentCharacter: CharacterSet = componentFirstCharacter.union(["-"])
-        let component = extend <^> char(componentFirstCharacter, name: "scope name character")
-            <*> zeroOrMore(char(componentSubsequentCharacter, name: "scope name character"))
+        let component = extend <^> (token("*") <|> char(componentFirstCharacter, name: "scope name character"))
+            <*> zeroOrMore(token("*") <|> char(componentSubsequentCharacter, name: "scope name character"))
         return ScopeName.init <^> (extend <^> component <*> zeroOrMore(token(".") *> component))
     }
     
@@ -48,11 +48,12 @@ extension ScopeName: Parsable, LosslessStringConvertible, ExpressibleByStringLit
 extension ScopeName {
     
     public func isPrefix(of name: ScopeName) -> Bool {
-        name.components.starts(with: components)
+        components.count <= name.components.count &&
+            zip(components, name.components).allSatisfy { $0 == $1 || $0 == "*" }
     }
     
     public func isRefinement(of name: ScopeName) -> Bool {
-        components.starts(with: name.components)
+        name.isPrefix(of: self)
     }
     
     public mutating func removeFirst(_ count: Int = 1) {

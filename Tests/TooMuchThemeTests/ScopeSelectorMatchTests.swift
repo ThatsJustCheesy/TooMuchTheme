@@ -15,7 +15,13 @@ final class ScopeSelectorMatchTests: XCTestCase {
             ("a b cd", Context(main: Scope("a something.else b ef")), false),
             (" a > b cd>e ", Context(main: Scope("a b other things cd.e e.f")), true),
             (" a > b cd>e ", Context(main: Scope("a other things b cd e")), false),
-            (" a > b cd>e ", Context(main: Scope("a b other things cd.e f.e e")), false)
+            (" a > b cd>e ", Context(main: Scope("a b other things cd.e f.e e")), false),
+            ("*.a b.*.c.*", Context(main: Scope("b.a b.d.c.e")), true),
+            ("*.a b.*.c.*", Context(main: Scope("b.a b.c")), false),
+            ("*.a b.*.c.*", Context(main: Scope("a b.d.c.e")), false),
+            ("*", Context(main: Scope("")), false),
+            ("", Context(main: Scope("something")), true),
+            ("", Context(main: Scope("")), true)
         ] {
             try assert(selector: selector, context: context, shouldMatch: shouldMatch)
         }

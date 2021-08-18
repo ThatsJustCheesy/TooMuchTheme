@@ -75,6 +75,12 @@ final class ScopeSelectorParseTests: XCTestCase {
             (
                 "under_score.underscore_",
                 ScopeSelector(composites: [.init(base: .init(term: .path(.init(root: "under_score.underscore_"))))])
+            ),
+            (
+                "star.* *.star",
+                ScopeSelector(composites: [.init(base: .init(term: .path(.init(root: "star.*", descendents: [
+                    .init(selector: .transitive, scopeName: "*.star")
+                ]))))])
             )
         ] {
             XCTAssertEqual(try ScopeSelector(selector), expected)
