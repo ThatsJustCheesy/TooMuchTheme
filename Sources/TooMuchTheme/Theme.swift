@@ -71,8 +71,8 @@ extension Theme {
         return attributes
     }
     
-    public func attributes(for scope: Scope?, fontProvider: FontProvider) throws -> [AttributedString.Key : Any] {
-        try attributes(for: scope.map { Context(main: $0) }, fontProvider: fontProvider)
+    public func attributes(for scope: Scope, fontProvider: FontProvider) throws -> [AttributedString.Key : Any] {
+        try attributes(for: Context(main: scope), fontProvider: fontProvider)
     }
     
 }
