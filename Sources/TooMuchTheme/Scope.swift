@@ -38,7 +38,7 @@ extension Scope {
     }
     
     public mutating func matchAndRemoveLeading(_ name: ScopeName) -> Bool {
-        var elements = elements
+        var elements = self.elements
         while let first = elements.popFirst() {
             if first.isRefinement(of: name) {
                 self.elements = elements
