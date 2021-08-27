@@ -21,7 +21,7 @@ public struct ScopeName: Equatable, Codable {
     
 }
 
-extension ScopeName: Parsable, LosslessStringConvertible, ExpressibleByStringLiteral {
+extension ScopeName: Parsable, CustomStringConvertible, ExpressibleByStringLiteral {
     
     static var parser: Parser<Character, Self> {
         let componentFirstCharacter = CharacterSet.alphanumerics.union(["_"])
@@ -31,16 +31,12 @@ extension ScopeName: Parsable, LosslessStringConvertible, ExpressibleByStringLit
         return ScopeName.init <^> (extend <^> component <*> zeroOrMore(token(".") *> component))
     }
     
-    public init<Str: StringProtocol>(_ string: Str) {
-        self.init(string.split(separator: ".").map { String($0) })
-    }
-    
     public var description: String {
         components.joined(separator: ".")
     }
     
     public init(stringLiteral value: StringLiteralType) {
-        self.init(value)
+        try! self.init(value)
     }
     
 }

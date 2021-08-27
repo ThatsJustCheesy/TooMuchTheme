@@ -7,8 +7,8 @@ final class ScopeSelectorParseTests: XCTestCase {
         for (selector, expected) in [
             ("a", ScopeSelector(composites: [.init(base: .init(term: .path(.init(root: "a", descendents: []))))])),
             (" ab ", ScopeSelector(composites: [.init(base: .init(term: .path(.init(root: "ab", descendents: []))))])),
-            ("a b cd", ScopeSelector(composites: [.init(base: .init(term: .path(.init(root: .init("a"), descendents: [.init(selector: .transitive, scopeName: "b"), .init(selector: .transitive, scopeName: .init("cd"))]))))])),
-            (" a > b cd>e ", ScopeSelector(composites: [.init(base: .init(term: .path(.init(root: .init("a"), descendents: [.init(selector: .direct, scopeName: "b"), .init(selector: .transitive, scopeName: "cd"), .init(selector: .direct, scopeName: "e")]))))]))
+            ("a b cd", ScopeSelector(composites: [.init(base: .init(term: .path(.init(root: "a", descendents: [.init(selector: .transitive, scopeName: "b"), .init(selector: .transitive, scopeName: "cd")]))))])),
+            (" a > b cd>e ", ScopeSelector(composites: [.init(base: .init(term: .path(.init(root: "a", descendents: [.init(selector: .direct, scopeName: "b"), .init(selector: .transitive, scopeName: "cd"), .init(selector: .direct, scopeName: "e")]))))]))
         ] {
             XCTAssertEqual(try ScopeSelector(selector), expected)
         }

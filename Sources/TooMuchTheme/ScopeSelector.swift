@@ -338,15 +338,8 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
     static let parser: Parser<Character, Self> =
         ScopeSelector.init <^> (
             (extend <^> Composite.parser <*> zeroOrMore(zeroOrMore(whitespacesOrNewline) *> token(",") *> Composite.parser))
+            <|> pure([])
         )
-    
-    public init(_ string: String) throws {
-        guard !string.isEmpty else {
-            self.init(composites: [])
-            return
-        }
-        self = try parse(Self.parser, string)
-    }
     
     public var description: String {
         composites.map { "\($0)" }.joined(separator: ", ")
@@ -367,6 +360,14 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
 protocol Parsable {
     
     static var parser: Parser<Character, Self> { get }
+    
+}
+
+extension Parsable {
+    
+    public init(_ string: String) throws {
+        self = try parse(Self.parser, string)
+    }
     
 }
 

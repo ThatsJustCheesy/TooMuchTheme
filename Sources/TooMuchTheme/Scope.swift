@@ -19,10 +19,14 @@ public struct Scope: Equatable, Codable {
 
 }
 
-extension Scope: LosslessStringConvertible {
+extension Scope: CustomStringConvertible, ExpressibleByStringLiteral {
     
-    public init<Str: StringProtocol>(_ string: Str) {
-        self.init(string.split { $0.isWhitespace }.map { ScopeName($0) })
+    public init<Str: StringProtocol>(_ string: Str) throws {
+        try self.init(string.split { $0.isWhitespace }.map { try ScopeName(String($0)) })
+    }
+    
+    public init(stringLiteral value: StringLiteralType) {
+        try! self.init(value)
     }
     
     public var description: String {
