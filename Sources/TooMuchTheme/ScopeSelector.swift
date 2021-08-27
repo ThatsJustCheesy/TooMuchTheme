@@ -48,7 +48,7 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
                 self.operand = operand
             }
             
-            public enum Operation: String, Parsable {
+            public enum Operation: String, Parsable, CustomStringConvertible {
                 
                 case union = "|"
                 case intersection = "&"
@@ -58,6 +58,10 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
                     { _ in Operation.union } <^> token("|") <|>
                     { _ in Operation.intersection } <^> token("&") <|>
                     { _ in Operation.difference } <^> token("-")
+                
+                public var description: String {
+                    rawValue
+                }
                 
             }
             
@@ -139,7 +143,7 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
             self.term = term
         }
         
-        public enum Side: String, Parsable, Equatable {
+        public enum Side: String, Parsable, CustomStringConvertible, Equatable {
             
             /// The left side of the cursor.
             case left = "L:"
@@ -155,6 +159,10 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
                     { _ in Side.both } <^> token("B")
                 )
                     <* token(":")
+            
+            public var description: String {
+                rawValue
+            }
             
         }
         
@@ -286,7 +294,7 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
                 self.scopeName = scopeName
             }
             
-            public enum Selector: String, Parsable {
+            public enum Selector: String, Parsable, CustomStringConvertible {
                 
                 case transitive = ""
                 case direct = ">"
@@ -294,6 +302,10 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
                 static let parser: Parser<Character, Self> =
                     { _ in Selector.direct } <^> token(">") <|>
                     { _ in Selector.transitive } <^> pure("")
+                
+                public var description: String {
+                    rawValue
+                }
                 
             }
             
@@ -328,12 +340,12 @@ public struct ScopeSelector: Matcher, Parsable, CustomStringConvertible, Equatab
             (extend <^> Composite.parser <*> zeroOrMore(zeroOrMore(whitespacesOrNewline) *> token(",") *> Composite.parser))
         )
     
-    public init<Str: StringProtocol>(_ string: Str) throws {
+    public init(_ string: String) throws {
         guard !string.isEmpty else {
             self.init(composites: [])
             return
         }
-        self = try parse(Self.parser, String(string))
+        self = try parse(Self.parser, string)
     }
     
     public var description: String {
