@@ -12,12 +12,12 @@ Includes:
   - `Scope` and `Context` matching
   - Fully compatible with TextMate 2 format
 - `Scope` and `Context` types
-  - A `Scope` is a list of scope names which emulates a TextMate scope (grammar derivation)
+  - A `Scope` is a list of scope names, which emulates a TextMate scope (grammar derivation)
     - `Codable` to/from space-separated scope names string
-    - Direct (`matchAndRemoveFirst`) and transient (`matchAndRemoveLeading`) scope name matching
+    - Direct (`matchAndRemoveFirst`) and transitive (`matchAndRemoveLeading`) scope name matching
   - A `Context` models a text editing selection, and is either
     - A `Scope` (`main`), or
-    - A pair of `Scopes`, one to the left of the text cursor (`left`) and one to the right (`main`)
+    - A pair of `Scope`s, one to the left of the text cursor (`left`) and one to the right (`main`)
 - `ScopeName` type
     - `Codable` to/from dot-separated components string
     - Prefix matching
